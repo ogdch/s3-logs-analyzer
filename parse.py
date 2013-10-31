@@ -58,16 +58,23 @@ class Parser():
                     if match is not None:
                         parsed = [match.group(1+n) for n in range(17)]
                         is_get_request = False
+                        date = ''
                         for (name, val) in zip(s3_names, parsed):
                             if name == 'operation' and val == 'REST.GET.OBJECT':
                                 is_get_request = True
-
+                            if name == 'datetime':
+                                date = val[0:11]
+                                if not re.search(r"^\d{2}/[A-Za-z]{3}/\d{4}", date):
+                                    raise TypeError
                             if name == 'key' and val is not '-' and val[-1:] is not '/' and is_get_request:
-                                if parsed_data.get(val, None) is not None:
-                                    parsed_data[val] = parsed_data[val] + 1
+                                if val in parsed_data.keys():
+                                    if date in parsed_data[val]:
+                                        parsed_data[val][date] = parsed_data[val][date] + 1
+                                    else:
+                                        parsed_data[val][date] = 1
                                 else:
-                                    parsed_data[val] = 1
-
+                                    parsed_data[val] = {}
+                                date = ''
         return parsed_data
 
 
@@ -77,9 +84,12 @@ class Parser():
 
         sorted_by_requests = sorted(parsed_data.iteritems(), key=operator.itemgetter(1), reverse=True)
         with open(os.path.join(self.DATA_FOLDER_PATH, folder + '.txt'), 'w') as summary_file:
+            summary_file.write('file,date,downloads\n')
             for line in sorted_by_requests:
-                (l, a) = line
-                summary_file.write("%s:\t\t%s\n" % (a, l))
+                (request, dates_and_downloads) = line
+                sorted_dates_and_downloads = sorted(dates_and_downloads.iteritems(), key=operator.itemgetter(1))
+                for date, downloads in sorted_dates_and_downloads:
+                    summary_file.write("%s,%s,%s\n" % (request, date, downloads))
 
 
 log_parser = Parser()
