@@ -83,7 +83,7 @@ class Parser():
         '''
 
         sorted_by_requests = sorted(parsed_data.iteritems(), key=operator.itemgetter(1), reverse=True)
-        with open(os.path.join(self.DATA_FOLDER_PATH, folder + '.txt'), 'w') as summary_file:
+        with open(os.path.join(self.DATA_FOLDER_PATH, folder + '.csv'), 'w') as summary_file:
             summary_file.write('file,date,downloads\n')
             for line in sorted_by_requests:
                 (request, dates_and_downloads) = line
