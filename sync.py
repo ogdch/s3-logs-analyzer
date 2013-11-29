@@ -37,15 +37,15 @@ class SyncS3():
         '''
 
         # Make sure the download folder exists
-        if not os.path.exists(self.DATA_FOLDER_PATH + prefix):
-            os.mkdir(self.DATA_FOLDER_PATH + prefix)
+        if not os.path.exists(os.path.join(self.DATA_FOLDER_PATH, prefix)):
+            os.mkdir(os.path.join(self.DATA_FOLDER_PATH, prefix))
 
         for key in self._get_s3_bucket().list(prefix=prefix):
             key_str = str(key.key)
 
             # check if file exists locally otherwise download
-            if not os.path.exists(self.DATA_FOLDER_PATH + key_str):
-                key.get_contents_to_filename(self.DATA_FOLDER_PATH + key_str)
+            if not os.path.exists(os.path.join(self.DATA_FOLDER_PATH, key_str)):
+                key.get_contents_to_filename(os.path.join(self.DATA_FOLDER_PATH, key_str))
                 print key_str
 
 syncer = SyncS3()
