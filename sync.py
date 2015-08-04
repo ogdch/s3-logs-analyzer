@@ -48,7 +48,7 @@ class SyncS3():
                     aws_access_key_id=self.AWS_ACCESS_KEY,
                     aws_secret_access_key=self.AWS_SECRET_KEY)
 
-        return conn.get_bucket(self.BUCKET_NAME, validate=False)
+        return conn.get_bucket(self.BUCKET_NAME)
 
 
     def _sync_log_files(self, prefix=None):
