@@ -1,2 +1,4 @@
 boto==2.13.3
 wsgiref==0.1.2
+pypandoc==0.7.0
+Unidecode==0.04.14
