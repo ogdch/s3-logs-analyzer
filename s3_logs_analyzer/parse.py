@@ -6,12 +6,6 @@ import argparse
 import re
 import operator
 
-parser = argparse.ArgumentParser(description='Extract and sum up the information from S3 log files')
-parser.add_argument('--folder', help='The folder to extract from', type=str, required=True)
-
-args = vars(parser.parse_args())
-
-
 class Parser():
 
     DATA_FOLDER_PATH = 'data/'
@@ -90,12 +84,3 @@ class Parser():
                 sorted_dates_and_downloads = sorted(dates_and_downloads.iteritems(), key=operator.itemgetter(1))
                 for date, downloads in sorted_dates_and_downloads:
                     summary_file.write("%s,%s,%s\n" % (request, date, downloads))
-
-
-log_parser = Parser()
-pd = log_parser._parse_log_files(args['folder'])
-log_parser._write_summary(args['folder'], pd)
-
-print '\n'
-print 'Parsing of the folder ' + args['folder'] + ' completed.'
-sys.exit()
